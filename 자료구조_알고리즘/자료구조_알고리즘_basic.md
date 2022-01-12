@@ -993,3 +993,202 @@ else :
 
 
 
+### 3. 재귀호출
+
+- 재귀호출은 자기 자신을 다시 호출하는 것
+- 상자를 반복해서 여는 과정을 재귀 호출 형태로 표현
+- 여러 상황에서 유용하지만 반복에 비해서 느리다.
+
+```python
+## 함수
+def openBox(): #count수 만큼 종이 상자 열기
+    global count
+    print("종이 상자 열기~~~")
+    count -=1
+    if count ==0 :
+        print('** 반지 넣기 **') #count가 0이 되면 반지 넣기
+        return
+    openBox()
+    print('종이 상자 닫기') #호출된 openBox 함수마다 종이상자 닫기를 실행하고 함수 종료
+    return
+        
+## 전역
+count = 10
+
+## 메인
+openBox()
+```
+
+```python
+## 정해진 숫자부터 1까지 더하기
+def addNumber(num):
+    if num<=1:
+        return 1
+    return num+addNumber(num-1)
+```
+
+```python
+## 팩토리얼 재귀함수
+def factorial(number):
+    if number <=1 :
+        return 1
+    return number * factorial(number-1)
+```
+
+```python
+## 카운트다운 함수
+def countDown(num):
+    if num==0:
+        print('발사')
+    else:
+        print(num)
+        countDown(num-1)
+```
+
+```python
+## 1씩 증가하면서 별 출력
+def printStar(num): 
+    global i
+    if i >= num:
+        return 0
+    print('★' * i)
+    i += 1
+    return printStar(num)
+```
+
+```python
+## 구구단 함수
+def gugu(dan, num):
+    print(f'{dan} X {num} = {dan*num}')
+    if num <9:
+        gugu(dan,num+1)
+
+
+for dan in range(2,10):
+    print(f'##{dan}단##')
+    gugu(dan,1)
+```
+
+```python
+## x의 n승 함수
+def pow(x, n): # x의 n승 값 반환
+    if n == 0:
+        return 1
+    return x * pow(x, n-1)
+```
+
+```python
+## array의 n부터 끝까지 합
+def arySum(arr, n):
+    if len(arr) == n:
+        return 0
+    return arr[n] + arySum(arr, n+1)
+```
+
+
+
+## 현업 알고리즘 문제
+
+주어진 배열에 대해 
+
+1. 음수의 경우 0으로 변경
+2. 100보다 클 경우 100으로 나눈 나머지로 변경
+3. 2x2 크기의 배열의 최대합 구하기
+
+```python
+ARRAY_LENGTH = 5  # 배열의 행과 열 크기(고정)
+
+def replaceData(numData): # numData	2차원 정수 배열
+    retData = [] # 조건에 따라서 전처리된 2차원 배열
+
+    ###########   여기부터 코딩 (1) ---------------->
+    retData = numData[:]
+    for i in range(ARRAY_LENGTH) : #ARRAY_LENGTH 가 5
+        for k in range(ARRAY_LENGTH):
+            if retData[i][k]<0:
+                retData[i][k] = 0
+            if retData[i][k]>100:
+                retData[i][k] = retData[i][k] % 100
+
+
+
+    ###########   <-------------- 여기까지 코딩 (1)
+
+    return retData
+
+
+# 2x2 크기의 배열의 최대합을 구한다.
+def getMaxSum(numData): # 요구 사항에 맞춰 처리된 2차원 정수 배열
+    maxSum = 0 # 최대합
+
+    ###########   여기부터 코딩 (2) ---------------->
+    for i in range(ARRAY_LENGTH-1):
+        for k in range(ARRAY_LENGTH-1):
+            hap = numData[i][k]+numData[i][k+1]+numData[i+1][k]+numData[i+1][k+1]
+            if hap > maxSum:
+                maxSum = hap
+
+
+
+
+    ###########   <-------------- 여기까지 코딩 (2)
+
+    return maxSum
+
+## 전역 변수 선언 부분
+numData =[] # 5x5 배열
+ARRAY_LENGTH = 5 # 배열의 행과 열 크기(고정)
+
+def main() :
+        global numData
+
+        loadData() # 2차원 배열 읽어오기
+
+        ## 원본 출력
+        print(' ----- 초기 배열 -----')
+        printData()
+
+        # 1. 데이터 치환 작업
+        numData = replaceData(numData)
+        print(' ----- 치환 후 배열 -----')
+        printData()
+
+        # 2. 최대 합 구하기.(2x2 크기)
+        maxSum = getMaxSum(numData)
+        print('최대 영역의 합: %d' % maxSum)
+
+       
+## 함수 선언 부분
+def  loadData() : # 데이터 불러오기
+    global numData
+
+    ###########
+    # 제공 데이터 세트 1 
+    # 5x5 숫자 배열. 
+    ###########
+    numData = \
+    [
+        [ 5, 7, -5, 100, 73 ],
+        [ 35, 23, 4, 190, 33 ],
+        [ 49, 85, 662, 39, 81 ],
+        [ 124, -59, 86, 46, 52 ],
+        [ 27, 7, 8, 33, -56 ] 
+    ]
+    
+    
+
+def printData() :
+        for i in range(0, ARRAY_LENGTH) :
+                for k in range(0, ARRAY_LENGTH) :
+                        try :
+                                print("%5d" % numData[i][k], end='')
+                        except :
+                                pass
+                print()
+        print('--------------------------------------')
+
+## 메인 함수 호출 ##
+if __name__ == "__main__" :
+    main()
+```
+
