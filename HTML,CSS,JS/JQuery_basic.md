@@ -122,3 +122,110 @@ compressed / uncompressed 중 선택해서 다운로드
 </html>
 ```
 
+## jq02-selector
+
+```html
+ <!-- 링크로 jquery 불러오기 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            //div 부분의 0번째 인덱스를 반환
+            $("div:eq(0)").css({"border":"1px solid red" , "width":"400px", "height":"200px"})
+            $("#view").css({"border":"1px solid red" , "width":"400px", "height":"100px"})
+        })
+
+        //태그 이름으로 선택
+        function selector01(){
+            $("span").css("color", "red");
+            $("#view").text('$("span").css("color","red");')
+        }
+
+        //id로 선택
+        function selector02(){
+            $("#t1").css("color" , "green");
+            $("#view").text('$("#t1").css("color" , "green")')
+        }
+
+        //class 선택
+        function selector03(){
+            $(".t2").css("color" , "violet");
+            $("#view").text('$(".t2").css("color" , "violet");')
+        }
+
+        // p c 선택 (parent child) 
+        function selector04(){
+            $("li span").css("background-color" , "blue");
+            $("#view").text('$("li span").css("background-color" , "blue")')    
+        }
+
+        // p>c 선택 -> b태그가 있는 부분은 선택이 안됨
+        function selector05(){
+            $("li > span").css("color" , "yellow")
+            $("#view").text('$("li > span").css("color" , "yellow")')
+        }
+
+        // nth-child 선택 -> 6대신 odd 쓰면 홀수만 , even 쓰면 짝수만
+        function selector06(){
+            $("li:nth-child(6)").css("background-color" , "yellow");
+            $("#view").text('$("li:nth-child(6)").css("background-color" , "yellow");')
+        }
+        //first - child 선택
+        function selector07(){
+            $("li:first-child").css("background-color" , "yellowgreen");
+            $("#view").text('$("li:first-child").css("background-color" , "yellowgreen")')
+        }
+
+        // last-child 선택
+        function selector08(){
+            $("li:last-child").css("color" , "orange");
+            $("#view").text('$("li:last-child").css("color" , "orange")')
+        }
+
+        function cls(){
+            //black이 default라서 아무것도 입력 안해도 된다
+            // css 를 연결해서 사용 가능 -> method chaining
+            $("*").css("color" , "black").css("background-color" , "")
+            $('#view').text("")
+        }
+
+    </script>
+</head>
+<body>
+
+    <h1>css 선택자</h1>
+
+    <div>
+        <ul>
+            <li><span>tag로 선택</span></li>
+            <li id="t1">id로 선택</li>
+            <li class="t2">class로 선택</li>
+            <li><span>parent child로 선택</span></li>
+            <li><b><span>parent &gt; child</span></b>로 선택</li>
+            <li>:nth-child(n/odd/even)로 선택</li>
+            <li>:first-child로 선택</li>
+            <li>:last-child로 선택</li>
+        </ul>
+    </div>
+    <br>
+    <div>
+        <button onclick="selector01()">태그선택(span)</button>
+        <button onclick="selector02()">id선택(t1)</button>
+        <button onclick="selector03()">class선택(t2)</button>
+        <button onclick="selector04()">p c 선택</button>
+        <button onclick="selector05()">p &gt; c선택</button>
+        <button onclick="selector06()">nth-child 선택</button>
+        <button onclick="selector07()">first-child 선택</button>
+        <button onclick="selector08()">last-child 선택</button>
+        <br>
+        <button onclick="cls()">reset</button>
+    </div>
+
+    <h2>코드 내용</h2>
+    <div id="view"></div>
+    
+</body>
+</html>
+```
+
+m
