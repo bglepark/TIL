@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style type="text/css">
+        #regist {
+			/* (absolute는 부모의 위치 기준으로, 얼마나 움직이는지) */
+            border: 1px solid black;
+            background: pink;
+            position: absolute;
+            top: 200px;
+            left: 500px;
+            display: none;
+        }
+    </style>
+    
+    <!-- 
+        display : none;			//공간을 차지하지 않는다 (만들어지지 않은 상태)
+        visibility: hidden;		//공간을 차지하고, 보이지 않는다 (만들어져 있는 상태)
+     -->
+    
+    <script type="text/javascript">
+        function openWin() {
+            var url = "js13-window-popup.html";
+            var title = "myframe";
+            var prop = "top=200px,left=600px,width=500px,height=500px";
+			//open(경로, 이름, 옵션)
+            window.open(url, title, prop);
+			// 경로만 줘도 새로운 탭에서 열린다
+			// window(url , prop) -> 새로운 창에서 열린다
+			// 여기서 말하는 이름(title)은 url에 있는 문서가 열릴 곳
+			// 여기서 iframe이 지정되어 있으니까 현재 페이지에서 문서가 열림 -> 최근엔 아예 사용을 안함
+        }
+    
+        function registForm() {
+			//기존에 display none으로 되어 있던걸 block으로 바꿔 화면에 보이게함
+            document.getElementById("regist").style.display = "block";
+			// 바디 색을 회색으로
+            document.body.style.background = "gray";
+			// 창열기 , 회원가입 버튼의 name : btn
+            var btns = document.getElementsByName("btn");
+            for ( var i in btns) {
+				// 여기에 있는 for 반복문은 향상된 for each 문이라고 한다.
+				// in 기준으로 오른쪽은 덩어리 -> 이름이 btn인 노드들이 모여있는 리스트(btns) -> 노드를 가져옴
+				// 기존 for (var i = 0 ; i<btns.length; i++)은 index만 가져옴
+				// 창열기, 회원 가입 버튼을 disabled 해서 작동하지 않게 함
+				console.log(i);
+                btns[i].disabled = "disabled";
+            }
+        }
+    
+        function closeWin() {
+			//display창을 다시 none으로 해서 화면에서 안보이게 함
+            document.getElementById("regist").style.display = "none";
+			// 바디 색을 흰색으로
+            document.body.style.background = "white";
+			// 창열기 , 회원가입 버튼을 받아서 disabled를 무효화 시켜줌
+            var btns = document.getElementsByName("btn");
+            for ( var i in btns) {
+                btns[i].disabled = "";
+            }
+        }
+    
+        function idchk() {
+            alert("중복체크를 확인하세요");
+        }
+    
+        function idCheck() {
+            open("js13-window-id-check.html", "", "width=300px,height=300px");
+        }
+    </script>
+    
+    
+</head>
+<body>
+    
+    <h1>window객체</h1>
+	<!-- pre => 입력한 그대로 보여주는 속성 -->
+	<pre>
+	프로퍼티
+	 -document
+	 -history
+	 -location
+	 -navigator
+	 -screen
+	 -frames
+	 -parent
+	 -top
+	 -self
+	메서드
+	 -alert()
+	 -confirm()
+	 -prompt()
+	 -back()
+	 -forward()
+	 -setInterval()
+	 -clearInterval()
+	 -setTimeout()
+	 -open()
+	 -close()
+	 -scroll(),scrollBy(), scrollTo() 
+	</pre>
+
+    <!-- 두번째 h1 -> 팝업에서 내용을 바꿈 -->
+	<div id="f1">
+		<h1>팝업창 만들기</h1>
+		<button onclick="openWin()" name="btn">창열기</button>
+		<hr>
+		<h1>회원가입하기(div팝업창)</h1>
+		<button onclick="registForm()" name="btn">회원가입</button>
+	</div>
+
+    <!-- 회원가입폼 시작 -->
+	<div id="regist">
+		<form>
+			<table>
+				<caption>회원가입</caption>
+				<tr>
+					<td>아이디</td>
+					<!-- readonly : 읽기 전용 , id를 누르면 중복체크 하라고 alert -->
+					<td><input type="text" name="id" onclick="idchk()" readonly="readonly" /> 
+
+					<input type="button" value="중복체크" onclick="idCheck()" /></td>
+				</tr>
+				<tr>
+					<td>패스워드</td>
+					<!-- checked : 명시해야 True로 표기됨 -->
+					<td><input type="password" name="pwd" alt="" style="color: red;" checked="checked" /></td>
+					<!-- alt와 checked="checked"는 함정이다 라디오와 체크박스에서만 사용됨  -->
+				</tr>
+				<tr>
+					<td colspan="2" align="center"><input type="button" value="확인" onclick="closeWin()" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<!-- 회원가입폼 종료 -->
+
+	<br/><br/><br/>
+	<!-- iframe 요소를 이용하면 해당 웹 페이지 안에 어떠한 제한 없이 또 다른 하나의 웹 페이지를 삽입할 수 있습니다. -->
+	<iframe name="myframe"></iframe>
+
+
+</body>
+</html>

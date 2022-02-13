@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        img{
+            width:200px;
+            height: 200px;
+        }
+    </style>
+
+    <!-- src로 가져온 다음에 사이에 코드 넣으면 안된다!! -->
+    <script src = "resources/js/jquery-3.6.0.min.js"></script>
+    <script>
+        /*
+            jquery 기본 작성법! (jquery 대신에 $표시를 쓴다)
+            -> selector 표현식
+            jQuery("selector").method();
+            $("selector").method();
+            -> $("p").css("color" , "red");
+            ==> p 태그에 빨간색 적용
+
+            기능 구현!!!
+            원래 맨 위 script를 배치하여 함수 등을 구현하면 문서를 다 읽은 후에 실행 가능
+            onload=function() {
+
+            }
+            -> 
+            $(function(){
+
+            });
+
+            $(document).ready(function(){
+                //도큐먼트 먼저 다 읽은 후에 함수 불러오기
+            });
+            $(function(){}); 이라고도 많이 사용하는데
+
+$(document).ready(function(){});와 동일한 의미입니다.
+
+$(document).ready(function(){}); 이것이 jQuery를 사용하기 위한 기본 문법입니다.
+
+정확히는 DOM(Document Object Model) 객체가 생성되어 준비되는 시점에서 호출된다는 의미입니다.
+
+JS와 비교하자면 document.onload()... 와 거의 비슷하다
+
+        */
+       //아이디가 test-btn이라는 요소를 찾아와라
+       $(function(){
+           $("#test-btn").click(function(){
+               alert("클릭했음!!")
+           });  
+
+           $("img").click(function(){
+               $(this).hide();
+           })
+       });
+
+       function showImg(){
+        // 감춰진 그림을 보이게 하자
+        $("img").show()
+       }
+
+       function resizeImg(){
+        // 100 100으로 변경하자
+        // css 2번 쓰기
+        // $("img").css("width" , "100px").css("height" , "100px")
+        // css 1번 쓰기
+        $("img").css({"width":"100px" , "height":"100px"})
+       }
+
+       function addImg(){
+        $("img").last().after("<img src='resources/imgs/img01.png'/>");
+       }
+
+       function toggleImg(){
+        // 보였다 안보였다 하자
+        $('img').toggle()
+       }
+
+    </script>
+</head>
+<body>
+    <h1>Jquery : Javascript library</h1>
+
+    <button id="test-btn">click me</button>
+    <br>
+    <button onclick="showImg();">이미지 보이기</button>
+    <button onclick="resizeImg()">이미지 축소</button>
+    <button onclick="addImg()">이미지 추가</button>
+    <button onclick="toggleImg()">이미지 숨기기/보이기</button>
+    
+    <br>
+    <br>
+    <div>
+        <img src="resources/imgs/img01.png" alt="img01">
+    </div>
+</body>
+</html>

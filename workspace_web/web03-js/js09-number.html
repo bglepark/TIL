@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript">
+        function numberObj(){
+            // 값 자체로 되어 있는 것을 literal이라고 한다
+            var num01 = 3;
+            alert(num01 + ":" + typeof(num01));
+
+            //object
+            var num02 = new Number(3);
+            alert(num02 + ":" + typeof(num02));
+
+            //문자형을 숫자형으로 바꿈
+            alert(parseInt("1")+1);
+
+            //Not a Number 뜸 -> NaN으로 표기
+            // alert(parseInt("a")+1)
+
+            var prop = prompt("숫자만 입력해 주세요");
+            if (isNaN(prop)){
+                alert("숫자가 아닙니다.");
+            } else{
+                alert("숫자가 맞습니다.")
+            }
+
+
+        }
+
+        function randomNum(){
+            //Math.random() : 0<=x<1
+            //Math.floor() : 내림
+            //Math.round() : 반올림
+            //Math.ceil() : 올림
+
+            // 0~100
+            var hundred = Math.floor(Math.random()*101);
+
+            // 10~100
+            var min = 10;
+            var max = 100;
+            var ran = Math.floor(Math.random()*(max-min)+min);
+            // alert(ran)
+            //로또 숫자 1~45 만들기 (1<=x<46)
+            var lotto = Math.floor(Math.random()*45+1)
+          alert(lotto) //확인 필요
+        }
+        
+        function randomBG(){
+            //style 색상 표현색 : rgb(256,256,256)
+            var rum = function(){
+                return Math.floor(Math.random()*256);
+                
+            }
+            document.body.style.backgroundColor = "rgb("+rum()+","+rum()+","+rum()+")";
+        }
+    </script>
+</head>
+<body>
+
+    <h1>숫자</h1>
+
+    <button onclick="numberObj();">숫자</button>
+    <br>
+    <button onclick="randomNum()">난수</button>
+    <br>
+    <button onclick="randomBG()">배경색 변환</button>
+    <br>
+    <button onclick="randomCircle()">랜덤 원 그리기</button>
+    <button onclick="circleArea()">원의 넓이 / 둘레</button>
+    <br>
+    원의 넓이 : <span id="area"></span>
+    <br>
+    원의 둘레 : <span id="len"></span>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <style>
+        #circle{
+            border: 1px solid red;
+            display : none;
+        }
+    </style>
+    <div id="circle"></div>
+    <script>
+        function randomCircle(){
+            var rnum = Math.floor(Math.random() * 200)
+            var circle = document.getElementById("circle");
+
+            circle.style.width = rnum + "px";
+            circle.style.height = rnum + "px";
+
+            circle.style.borderRadius = Math.floor(rnum/2) + "px";
+            circle.style.display = "block";
+        }
+
+        function circleArea(){
+            // Math.PI
+            // 원의 넓이 : pi r r
+            var circleWidth = document.getElementById("circle").style.width;
+            // alert(circleWidth)
+            var r2 = circleWidth.substring(0,circleWidth.length-2)
+            // alert(r2)
+            var r = Math.floor(r2/2);
+            // alert(parseInt(circleWidth))  <- 이렇게 하면 한번에 숫자만 나옴
+            // var doc1 = document.getElementById('area')
+            // doc1.innerHTML = Math.PI*r*r
+
+            // var doc2 = document.getElementById('len')
+            // doc2.innerHTML = Math.PI*r2
+            document.getElementById("area").innerHTML = Math.floor(Math.PI * Math.pow(r,2))
+            document.getElementById("len").innerHTML = Math.floor(Math.PI * r2)
+            
+
+            // 원의 둘레 : 2 pi r
+            Math.PI*r*r
+            
+        }
+    </script>
+    
+</body>
+</html>

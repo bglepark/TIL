@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        a>img{width:50px ; height: 50px;}
+        #gallery{width: 200px; height: 200px;}
+        p{width: 350px; height: 250px;}
+        img{vertical-align: middle;}
+        a{text-decoration: none;}
+    </style>
+
+    <script>
+        var num=1
+
+        function prevGallery(){
+            num--; //num=num-1
+            //전역 변수를 받아서 숫자를 감소시키면서 이미지가 변하게 만들고 있다.
+            if(num<1){
+                num=6;
+                
+            }
+            document.getElementById("gallery").src = "resources/imgs/img0"+num+".png";
+
+            //return을 사용한 이벤트 전파 막기 (jquery때 공부!)
+            // a tag의 기본속성은 naver로 이동해라 -> 클릭 이벤트가 발생한 이후에 기본동작(네이버)가 작동하지 않는다.
+            return false;
+        }
+
+        function nextGallery(){
+            num++;
+            if(num>6){
+                num = 1;
+            }
+
+            document.getElementById("gallery").src = "resources/imgs/img0"+num+".png"
+
+            return false;
+        }
+    </script>
+
+</head>
+<body>
+
+    <div id="gallerywrap">
+        <p>
+            <a href="#pre" onclick="prevGallery()">
+                <img src="resources/imgs/arrowleft.png" alt="왼쪽화살표">
+            </a>
+
+            <img id="gallery" src="resources/imgs/img01.png" alt="gallery">
+
+            <a href="#next" onclick="nextGallery()">
+                <img src="resources/imgs/arrowright.png" alt="오른쪽화살표">
+            </a>
+        </p>
+    </div>
+
+
+    
+</body>
+</html>

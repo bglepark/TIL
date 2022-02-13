@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #colorbox{
+            width:320px;
+            height:320px;
+            position:relative;
+        }
+        #red, #green, #blue, #magenta{
+            width:150px;
+            height:150px;
+            border: 1px solid black;
+            position: absolute;
+        }
+        #green{
+            left:160px;
+        }
+        #blue{
+            top:160px
+        }
+        #magenta{
+            left:160px;
+            top:160px;
+        }
+    </style>
+
+    <script>
+        function selectColor(){
+            var chks = document.getElementsByName("chk"); //nodelist가 들어가 있음. chk의 checkbox 4개 들어있음
+
+            for (var i = 0; i<chks.length; i++){
+                // console.log(chks[i].checked)
+                if (chks[i].checked){ //()괄호가 붙어 있으면 메소드 , 이건 그냥 변수이다
+                    document.getElementById(chks[i].value).style.backgroundColor=chks[i].value
+                }
+                else{
+                    document.getElementById(chks[i].value).style.backgroundColor=""
+                }
+                }
+            }
+
+            function allCehck(bool){
+                var chks = document.getElementsByName("chk");
+
+                for (var i=0; i<chks.length; i++){
+                    chks[i].checked = bool; //checked된 속성 true/false를 bool에 각각 넣어 줄 것이다.
+                }
+            }
+            //하나를 체크 풀면 전체 선택도 풀리는 상태 만들기
+
+            //취소 누르면 싹 다 지우기
+            function clearDiv(){
+                allCehck(false);
+
+                var colorbox = document.querySelectorAll("#colorbox > div") //colorbox가 가지고 있는 자식요소 div를 찾아라
+                for (var i=0; i<colorbox.length; i++){
+                    colorbox[i].style.backgroundColor=""
+                }
+            }
+
+        
+    </script>
+</head>
+<body>
+
+    <div id="colorbox">
+        <div id="red">red</div>
+        <div id="green">green</div>
+        <div id="blue">blue</div>
+        <div id="magenta">magenta</div>
+
+    </div>
+    
+    <div id="base">
+        <form>
+        
+            <input type="checkbox" name="all" onclick="allCehck(this.checked)"> 전체 선택 <br> 
+            
+
+            <input type="checkbox" name="chk" value="red"> 빨강 <br>
+            <input type="checkbox" name="chk" value="green"> 초록 <br>
+            <input type="checkbox" name="chk" value="blue"> 파랑 <br>
+            <input type="checkbox" name="chk" value="magenta"> 진홍 <br>
+
+            <input type="button" value="선택" onclick="selectColor()">
+            <input type="button" value="취소" onclick="clearDiv()">
+
+        </form>
+    </div>
+    
+</body>
+</html>

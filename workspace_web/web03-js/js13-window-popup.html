@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script type="text/javascript">
+        function test(){
+            // name이 test인 text값의 0번지 주소값을 받아서 val에 저장
+            var val=document.getElementsByName("test")[0].value;
+            // opener : 자기자신을 연 기존 창의 window 객체를 참조
+            // 즉, 이 popup창을 만든 window페이지에서 2번째 h1 태그를 찾아 문서 내용을 바꿈
+            // 2번째 h1 태그는 팝업창 만들기 -> val 로 내용을 바꿈
+            opener.document.getElementsByTagName("h1")[1].innerHTML=val;
+            close();
+        }
+    </script>
+    
+</head>
+<body>
+    
+	<input type="text" name="test"/>
+	<input type="button" onclick="test()" value="전달"/>
+	<input type="button" onclick="self.close()" value="창닫기">
+    <!-- self가 들어갔기 때문에 window 객체를 반환해서 close한다 -->
+    <!--  팝업이 아니라 프레임에서 열린거라서 닫히지 않는다 -->
+
+
+</body>
+</html>

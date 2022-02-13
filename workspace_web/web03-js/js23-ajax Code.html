@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function ajaxTest(){
+
+            var xhr = new XMLHttpRequest(); //객체 생성 (통신 관련된 객체)
+
+            //on 시리즈는 이벤트다 , readystate가 발생할때마다 callback 발생
+            xhr.onreadystatechange = function(){ //이 함수가 call back (onreadystatechange가 실행할때마다 해당 함수를 호출)
+                // 4: 요청의 완료
+                if(xhr.readyState==4){
+                    // 200: 정상 응답
+                    if(xhr.status ==200){
+                        // alert(xhr.responseText);
+                        var respXml = xhr.responseXML; //응답된 데이터는 xml이야 라고 말해줌(원래 받는 문서는 str형태이다->xml 객체로 바꿔줌)
+                        // console.log(respXml);
+                        // console.log(typeof(respXml))
+
+                        var table = document.getElementById('tb');
+                        var rows = respXml.getElementsByTagName('ROW'); //ROW의 타입은 노드리스트 -> ROW[0] : 노드이다
+                        // console.log(rows);
+
+                        //emplist.xml을 서버에서 가지고 와서 xml 파일 안에 있는 데이터들을 table 안에 
+                        // tr 태그 만들고, td태그 만들고 텍스트 넣어서 화면에 출력시켜라
+
+                        // 1. column 이름 만들자
+                        var columnTr = document.createElement('tr');
+                        for (var i= 0 ; i<rows[0].children.length; i++){ //ROW 의 CHILDREN 5개 데이터를 가져올거다
+                            // console.log(rows[0].children[i].nodeName)
+                            var th = document.createElement("th");
+                            th.appendChild(document.createTextNode(rows[0].children[i].nodeName))
+
+                            columnTr.appendChild(th)
+                            
+                           
+
+                        }
+                        table.appendChild(columnTr)
+
+                        //2. data 만들자
+                        for (var i=0; i<rows.length; i++){
+                            var tr=document.createElement("tr");
+                            for (var j=0; j<rows[i].children.length; j++){
+                                var td = document.createElement("td");
+                                td.appendChild(document.createTextNode(rows[i].children[j].textContent));
+                                tr.appendChild(td);
+                            }
+                            table.appendChild(tr);
+                        }
+                        
+                        
+                            
+                            
+                    }      
+            }
+        }
+            // get 방식으로 요청 , 해당 경로에 요청
+            xhr.open('GET' , 'emplist.xml'); // GET방식으로 뒤의 경로로 연결
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+
+    <!-- 
+        ajax : Asynchronous Javascript And Xml
+        비 동기 통신\
+        클라이언트와 서버가 동기화되지 않는다
+        일반적으로 서버에 요청을 하면 기다린다. (아무것도 안하고 기다린다)
+        그러나 비 동기 통신은 요청하고 지 할거 한다.
+        callback : call 해야지 back 할거야
+        
+     -->
+
+    <button onclick="ajaxTest();">ajax</button>
+    <table id="tb" border="1"></table>
+
+
+    
+</body>
+</html>

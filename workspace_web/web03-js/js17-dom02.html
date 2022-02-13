@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function searchPar(){
+            var child02 = document.getElementsByTagName("p")[1];
+            var div = child02.parentNode;
+            alert(div);
+            alert(typeof(div));
+            alert(div.nodeName);
+            div.style.backgroundColor = "violet"
+            
+        }
+
+        function searchChi(){
+            // var div = document.getElementsByTagName("div") //div가 들어 있는 값이 1개인 노드리스트를 반환
+            var div = document.getElementsByTagName("div")[0];
+
+            //자식요소들 가져오기
+            var divChildren = div.childNodes; //childNodes는 div 태그 안에 있는 모든 걸 가져온다
+            //[공백, child01 , 공백 , child02, 공백 , child03, 공백] -> 공백은 tag가 아니라서 undefined라고 뜸
+            // alert(divChildren.length) -> 7이 나온다
+            // divChildren[3].style.backgroundColor= "blue"
+
+            for (var i=0 ; i<divChildren.length; i++){
+                // console.log(divChildren[i].tagName);
+                console.log(divChildren[i].nodeName);
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <h1>부모탐색 , 자식탐색</h1>
+
+    <div>
+        <p>child01</p>
+        <p>child02</p>
+        <p>child03</p>
+    </div>
+
+    <button onclick="searchPar()">부모탐색</button>
+    <br>
+    <button onclick="searchChi()">자식탐색</button>
+    
+</body>
+</html>

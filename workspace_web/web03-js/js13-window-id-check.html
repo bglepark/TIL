@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <script type="text/javascript">
+        //중복확인을 위해 미리 변수를 설정
+        var ids=["multi","java","script"];
+        
+        function confirmChk(){
+                var id=document.getElementsByName("id")[0].value;
+            var div=document.getElementsByTagName("div")[0];
+            // 인덱스가 -1이면 존재하지 않다는 뜻 -> 즉 != -1이므로 아이디가 존재
+            if(ids.indexOf(id)!=-1){
+                // 배열 객체에서도 인덱스를 사용할 수 있고, 값이 없으면 -1을 리턴한다
+                div.innerHTML="<b>아이디가 존재합니다.</b>";
+            }else{
+                // 사용 가능한 아이디면 확인 버튼 생성하고 클릭 시 , insertID 함수 실행
+                var userId="사용할 수 있는 아이디입니다."
+                        +"<input type='button' value='확인'"
+                        +"onclick='insertId(\""+id+"\")'>";
+                        // div[0]인 아이디 칸에 입력한 id를 삽입
+                        // 부호 무효화 -> escape character(escape sequence)
+                        // 문자열은 sequence 하다 (문자 하나하나가 모여서 만들어진것이기 때문에)
+                        // 저거 없이 확인을 누르면 error 발생 -> 변수명으로 취급한다
+                div.innerHTML=userId;          
+            }
+        }
+        
+        function insertId(id){
+            //팝업을 오픈한 윈도우 객체 화면에서 'id'라는 name 중 0번째 값을 input한 id로 바꿈
+            opener.document.getElementsByName("id")[0].value=id;
+            // input태그를 마우스로 클릭하여 입력상태로 만든것을 포커스를 얻었다고 한다.
+            opener.document.getElementsByName("pwd")[0].focus();
+            close();
+        }
+    </script>
+
+</head>
+<body>
+    
+	<table>
+		<tr>
+			<td>아이디</td>
+			<td><input type="text" name="id"/></td>
+		</tr>
+		<tr>
+            <!-- 행 합치기 -->
+			<td colspan="2"> 
+				<input type="button" value="중복확인" onclick="confirmChk()"/>
+				<input type="button" value="취소" onclick="self.close()"/>
+			</td>
+		</tr>
+	</table>
+	<div></div>
+
+</body>
+</html>

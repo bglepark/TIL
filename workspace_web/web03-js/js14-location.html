@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function locTest(){
+            location.href="http://www.naver.com"
+            // location.assign("http://127.0.0.1:5500/web03-js/index.html")
+            // location.assign("http://www.google.com")
+            location.replace("http://lc.multicampus.com/k-digital") //사이트 갔다가 뒤로 가기 하면 index로 감
+            // href나 assign은 해당 경로로 가라! 라는 뜻
+            // replace는 해당 경로로 가라 라는 뜻이 아니라 현재 페이지를 해당 경로로 바꿔라! 라는 뜻이다
+            // location.reload(); //페이지 새로고침
+
+        }
+    </script>
+</head>
+<body>
+
+    <button onclick="locTest()">경로 연습</button>
+    
+</body>
+</html>
