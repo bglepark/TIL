@@ -27,26 +27,33 @@ Created on 2021
 # SALES / 매출액 / Double
 # =============================================================================
 # =============================================================================
+
 import pandas as pd
 import numpy as np
 
-data1 = pd.read_csv('Dataset_01.csv')
-data1.info()
-data1.columns
+dat1=pd.read_csv('Dataset_01.csv')
 
+# pwd
+# import os
+# os.chdir('')
+# pwd
+
+dat1.info()
+dat1.columns
+# ['TV', 'Radio', 'Social_Media', 'Influencer', 'Sales']
 #%%
 
 # =============================================================================
 # 1. 데이터 세트 내에 총 결측값의 개수는 몇 개인가? (답안 예시) 23
 # =============================================================================
-print(data1.isna().sum().sum())
+# 결측 수
+dat1.isna().sum().sum()
 
-#답 : 26
+# 답: 26
+
 
 # [참고] : 결측치가 포함된 행의 수
-data1.isna().any(axis=1).sum()
-
-
+dat1.isna().any(axis=1).sum()
 
 #%%
 
@@ -57,18 +64,23 @@ data1.isna().any(axis=1).sum()
 # 자리에서 반올림하여 소수점 넷째 자리까지 기술하시오. (답안 예시) 0.1234
 # =============================================================================
 
-var_list = ['TV' , 'Radio' , 'Social_Media' , 'Sales']
 
-q2 = (data1.corr().drop('Sales')['Sales'].abs())
+var_list=['TV', 'Radio', 'Social_Media', 'Sales']
 
-print(q2.max()) #최대값
-print(q2.idxmax())#인덱스명
-print(q2.argmax())#위치번호
-print(q2.nlargest(1))#값과 인덱스명
+q2=dat1.corr().drop('Sales')['Sales'].abs()
 
-#정답
-print(round(q2.max(), 4))
 
+# 상관계수를 소수점 5번째
+# 자리에서 반올림하여 소수점 넷째 자리까지 기술
+
+q2.max() # 최대값
+q2.idxmax() # 인덱스명
+q2.argmax() # 위치번호
+q2.nlargest(1) # 값과 인덱스명
+
+round(q2.max(),4)
+
+# 답: 0.9995
 
 #%%
 
@@ -80,9 +92,9 @@ print(round(q2.max(), 4))
 # 이하는 버리고 소수점 셋째 자리까지 기술하시오. (답안 예시) 0.123
 # =============================================================================
 
-var_list = ['TV' , 'Radio' , 'Social_Media' ]
+var_list=['TV', 'Radio', 'Social_Media']
 
-q3 = data1.dropna()
+q3=dat1.dropna()
 
 from sklearn.linear_model import LinearRegression
 from statsmodels.formula.api import ols
@@ -90,46 +102,51 @@ from statsmodels.api import OLS, add_constant
 
 # LinearRegression
 
-lm = LinearRegression(fit_intercept=True).fit(q3[var_list] , q3['Sales'])
+lm=LinearRegression(fit_intercept=True)
+lm.fit(q3[var_list], q3['Sales'])
 
-# 참고 
-#q3['Sales'].shape #(4546,)
-#q3[['Sales']].shape #(4546,1)
-#q3['Sales'].values.reshape(-1,1).shape
+# 참고
+# q3['Sales'].shape # (4546,)
+# q3[['Sales']].shape # (4546, 1)
+# q3['Sales'].values.reshape(-1,1) .shape
 
 dir(lm)
-print(lm.intercept_ )#상수항/절편 , -0.13396305194200409
-print(lm.coef_) #회귀계수 [ 3.56256963 -0.00397039  0.00496402]
+
+lm.intercept_  # 상수항/절편, -0.13396305194211777
+lm.coef_  # 회귀계수  [ 3.56256963, -0.00397039,  0.00496402]
 
 
-#ols
-#변수1 = ols(식, 데이터).fit() 식 : 'y~x1+x2+x3-1'
-# -1의 의미 : 상수항 미포함 , C() : 범주
-#변수1 = ols(식, 데이터)
-#변수2 = 변수1.fit()
+# ols
+# 변수1=ols(식, 데이터).fit() 식: 'y~x1+C(x2)+x3-1',
+#  -1의 의미: 상수항 미포함, C(): 범주형
+# 변수1=ols(식, 데이터)
+# 변수2=변수1.fit()
 
-# 식 제작 : 'Sales~TV+Radio+Social_Media'
-form1 = 'Sales~'+'+'.join(var_list)
-q3_out=ols(form1 , q3).fit()
+# 식 제작: 'Sales~TV+Radio+Social_Media'
+form1 = 'Sales~' + '+'.join(var_list)
 
-print(dir(q3_out))
+print(form1)
+# Sales~TV+Radio+Social_Media
+q3_out=ols(form1, q3).fit()
 
-print(q3_out.summary())
+dir(q3_out)
 
-print(q3_out.params.drop('Intercept').sort_values(ascending=False).values)
+q3_out.summary()
 
-# 답 : [ 3.56256963  0.00496402 -0.00397039]
+q3_out.params.drop('Intercept').sort_values(ascending=False).values
+
+# 답: [ 3.56256963,  0.00496402, -0.00397039])
 
 # [참고] 유의미한 변수 찾기
-print(q3_out.pvalues)
-print(q3_out.pvalues<0.05)
-q3_out.pvalues[q3_out.pvalues<0.05]
-dir(q3_out) #outlier_test 찾기
-outlier_score = q3_out.outlier_test()
-q3[outlier_score['bonf(p)']<0.05]
+q3_out.pvalues[q3_out.pvalues < 0.05].index
 
-q3_out2 = OLS(q3['Sales'] , add_constant(q3[var_list])).fit()
+dir(q3_out)
+outlier_score=q3_out.outlier_test()
+q3[outlier_score['bonf(p)'] < 0.05]
+
+q3_out2=OLS(q3['Sales'], add_constant(q3[var_list])).fit()
 q3_out2.summary()
+
 #%%
 
 # =============================================================================
@@ -152,9 +169,11 @@ q3_out2.summary()
 import pandas as pd
 import numpy as np
 
-data2 = pd.read_csv('Dataset_02.csv')
+data2=pd.read_csv('Dataset_02.csv')
+
 data2.columns
 # ['Age', 'Sex', 'BP', 'Cholesterol', 'Na_to_K', 'Drug']
+
 #%%
 
 # =============================================================================
@@ -164,11 +183,11 @@ data2.columns
 # =============================================================================
 
 
-q1 = data2[['Sex' , 'BP' , 'Cholesterol']].value_counts(normalize=True)
+q1=data2[['Sex', 'BP', 'Cholesterol']].value_counts(normalize=True)
 
+q1[('F', 'HIGH', 'NORMAL')]
 
-q1[('F' , 'HIGH' , 'NORMAL')]
-
+# 답: 0.105
 
 #%%
 
@@ -187,57 +206,53 @@ q1[('F' , 'HIGH' , 'NORMAL')]
 # (답안 예시) 3, 1.23456
 # =============================================================================
 
-q2 = data2.copy()
+q2=data2.copy()
 
-# 변수생성
+# 변수 생성
 # np.where(조건) : 조건과 매칭되는 위치 리턴
 # np.where(조건, 참 실행문, 거짓 실행문) 
- 
 
-q2['Age_gr'] = np.where(q2.Age< 20, 10,
-                        np.where(q2.Age <30 , 20,
-                                 np.where(q2.Age<40,30,
-                                          np.where(q2.Age<50,40,
-                                                   np.where(q2.Age<60,50,60)))))
+q2['Age_gr']=np.where(q2.Age < 20, 10,
+                np.where(q2.Age < 30, 20,
+                   np.where(q2.Age < 40, 30,
+                      np.where(q2.Age < 50, 40,
+                         np.where(q2.Age < 60,  50, 60)))))
+   
+q2['Na_K_gr']=np.where(q2.Na_to_K <= 10, 'Lv1',
+                 np.where(q2.Na_to_K <= 20, 'Lv2', 
+                    np.where(q2.Na_to_K <= 30, 'Lv3', 'Lv4')))
 
-q2['Na_K_gr'] = np.where(q2.Na_to_K<=10 , 'Lv1' , 
-                         np.where(q2.Na_to_K <= 20, 'Lv2',
-                                  np.where(q2.Na_to_K <=30, 'Lv3' , 'Lv4')))
+# 빈도 생성
+tab=pd.crosstab(index=q2['Sex'], columns=q2['Drug'])
 
-#빈도 생성
-tab = pd.crosstab(index = q2['Sex'] , columns= q2['Drug'])
-print(tab)
-
-#카이스퀘어 검정
+# 카이스퀘어 검정
 from scipy.stats import chi2_contingency
 
-chi_test = chi2_contingency(tab)
-pvalue = chi_test[1]
+chi_test=chi2_contingency(tab)
+pvalue=chi_test[1]
 
-#반복문으로 구성
+# 반복문으로 구성
+from scipy.stats import chi2_contingency
 
-q2.columns
+var_list=['Sex', 'BP', 'Cholesterol', 'Age_gr', 'Na_K_gr']
 
-var_list = ['Sex', 'BP', 'Cholesterol',  'Age_gr','Na_K_gr']
-q2_out = []
+q2_out=[]
 for i in var_list:
-    tab = pd.crosstab(index = q2[i] , columns= q2['Drug'])
-    chi_test = chi2_contingency(tab)
+    tab=pd.crosstab(index=q2[i], columns=q2['Drug'])
+    chi_test=chi2_contingency(tab)
     pvalue=chi_test[1]
-    q2_out.append([i,pvalue])
+    q2_out.append([i, pvalue])
 
 # Drug 타입과 연관성이 있는 변수는 몇 개
-q2_out = pd.DataFrame(q2_out , columns=['var' , 'pvalue'])
-q2_out2 =q2_out[q2_out.pvalue<0.05]
-
-len(q2_out2) #답 : 4
-
+q2_out=pd.DataFrame(q2_out, columns=['var', 'pvalue'])
+q2_out2=q2_out[q2_out.pvalue < 0.05]
+len(q2_out2) # 4
 
 # 연관성이 있는 변수
 # 가운데 가장 큰 p-value를 찾아 소수점 여섯 번째 자리 이하는 버리고
-q2_out2.pvalue.max()
+q2_out2.pvalue.max() # 0.0007010113024729462
 
-# 답 : 4, 0.00070
+# 답: 4, 0.00070
 
 #%%
 
@@ -253,37 +268,31 @@ q2_out2.pvalue.max()
 # 12.345
 # =============================================================================
 
-q3 = data2.copy()
+q3=data2.copy()
 q3.columns
-# 변수생성
-q3['Sex_cd'] = np.where(q3.Sex == 'M' , 0 , 1)
-q3['BP_cd'] = np.where(q3.BP == 'LOW' , 0 , 
-                       np.where(q3.BP == 'NORMAL' , 1, 2))
-q3['Ch_cd'] = np.where(q3.Cholesterol ==  'NORMAL' , 0 , 1)
+# 변수 생성
+q3['Sex_cd']=np.where(q3.Sex == 'M', 0, 1)
+q3['BP_cd']=np.where(q3.BP == 'LOW', 0, 
+              np.where(q3.BP == 'NORMAL', 1, 2))
+q3['Ch_cd']=np.where(q3.Cholesterol == 'NORMAL', 0, 1)
 
-#의사결정나무 적용 - 모델 생성
+# 의사결정나무 적용 - 모델 생성
 from sklearn.tree import DecisionTreeClassifier, plot_tree, export_text
 
-var_list = ['Age', 'Na_to_K', 'Sex_cd', 'BP_cd', 'Ch_cd']
+var_list=['Age', 'Na_to_K', 'Sex_cd', 'BP_cd', 'Ch_cd']
 
-dt = DecisionTreeClassifier().fit(q3[var_list] , q3['Drug'])
+dt=DecisionTreeClassifier().fit(q3[var_list], q3['Drug'])
 
-# 모델 탐색 , root node , 룰 시각화, 룰 텍스트 호출
+# 모델 탐색, root node, 룰 시각화, 룰 텍스트 호출
 
-plot_tree(dt , feature_names=var_list , 
+plot_tree(dt, feature_names=var_list,
           class_names=list(q3['Drug'].unique()),
           max_depth=1, fontsize=8)
 
 
+print(export_text(dt, feature_names=var_list, decimals=3))
 
-print(export_text(dt, feature_names=var_list , decimals=3))
-
-# Na_to_K <= 14.829 (답)
-
-
-
-
-
+# 답: Na_to_K, 14.829
 
 
 
@@ -316,8 +325,7 @@ print(export_text(dt, feature_names=var_list , decimals=3))
 import pandas as pd
 import numpy as np
 
-data3 = pd.read_csv('Dataset_03.csv')
-
+data3=pd.read_csv('Dataset_03.csv')
 
 #%%
 
@@ -327,23 +335,20 @@ data3 = pd.read_csv('Dataset_03.csv')
 # 정의할 때, 이상치에 해당하는 데이터는 몇 개인가? (답안 예시) 10
 # =============================================================================
 
-q1 = data3.copy()
+q1=data3.copy()
 
-q1['forehead_ratio'] = q1['forehead_width_cm']/q1['forehead_height_cm']
+q1['forehead_ratio']=q1['forehead_width_cm']/q1['forehead_height_cm']
 
-xbar = q1['forehead_ratio'].mean()
-std = q1['forehead_ratio'].std()
+xbar=q1['forehead_ratio'].mean()
+std=q1['forehead_ratio'].std()
 
-UB = xbar + 3* std
-LB = xbar - 3 * std
+UB=xbar + 3 * std
+LB=xbar - 3 * std
 
-outlier_data = q1[(q1['forehead_ratio']>UB) | (q1['forehead_ratio']<LB)]
+outlier_data=q1[(q1['forehead_ratio'] > UB) |  (q1['forehead_ratio'] < LB)]
 len(outlier_data)
 
-
-
-
-
+# 답: 3
 
 #%%
 
@@ -360,19 +365,14 @@ q1.columns
 g_m=q1[q1.gender=='Male']['forehead_ratio']
 g_f=q1[q1.gender=='Female']['forehead_ratio']
 
-from scipy.stats import ttest_ind , bartlett
+from scipy.stats import ttest_ind, bartlett
 
-q2_out = ttest_ind(g_m, g_f , equal_var=False )
+q2_out=ttest_ind(g_m, g_f, equal_var=False)
+
 q2_out.pvalue # 0.0027186702390657176
-q2_out.pvalue < 0.01 #Y
+q2_out.pvalue < 0.01  # Y
 
-
-
-
-
-
-
-
+# 답: 
 
 
 #%%
@@ -396,40 +396,34 @@ q2_out.pvalue < 0.01 #Y
 # from sklearn import metrics
 # train_test_split 의 random_state = 123
 # =============================================================================
-import pandas as pd
-import numpy as np
 
-data3 = pd.read_csv('Dataset_03.csv')
-#train/trst 분리
+# train/test 분리
 from sklearn.model_selection import train_test_split
-train, test = train_test_split(data3 , test_size=0.3 , random_state=123)
 
+train, test=train_test_split(data3, test_size=0.3, random_state=123)
 
 # 학습
 from sklearn.linear_model import LogisticRegression
 
-var_list = data3.columns.drop('gender')
-logit = LogisticRegression(random_state=123).fit(train[var_list] , train['gender'])
-
+var_list=data3.columns.drop('gender')
+logit=LogisticRegression(random_state=123).fit(train[var_list], train['gender'])
 
 dir(logit)
 
-#예측
+# 예측
 q3_pred=logit.predict(test[var_list])
-q3_pred_pr = logit.predict_proba(test[var_list])
-np.where(q3_pred_pr[:,1]>0.7, 'Male'  , "Female")
+q3_pred_pr=logit.predict_proba(test[var_list])
+np.where(q3_pred_pr[:,1] >= 0.7, 'Male', 'Female')
 
+# 성능평가
 
-#성능평가
 from sklearn.metrics import precision_score, classification_report
-precision_score(test['gender'] , q3_pred , pos_label='Male')
 
-#  0.9596354166666666
-# 0.96(둘째짜리까)
+precision_score(test['gender'], q3_pred, pos_label='Male')
+
+# 답: 0.96
 
 print(classification_report(test['gender'], q3_pred))
-
-
 
 
 #%%
@@ -462,10 +456,12 @@ print(classification_report(test['gender'], q3_pred))
 # from sklearn.linear_model import LinearRegression
 
 #%%
+
 import pandas as pd
 import numpy as np
 
-data4 = pd.read_csv('Dataset_04.csv')
+data4=pd.read_csv('Dataset_04.csv')
+
 # =============================================================================
 # 1.한국인의 1인당 육류 소비량이 해가 갈수록 증가하는 것으로 보여 상관분석을 통하여
 # 확인하려고 한다. 
@@ -475,12 +471,14 @@ data4 = pd.read_csv('Dataset_04.csv')
 # (답안 예시) 0.55
 # =============================================================================
 data4.columns
+# ['LOCATION', 'SUBJECT', 'TIME', 'Value'],
 
-q1 = data4[data4.LOCATION =='KOR']
-q1_out = q1.groupby('TIME')['Value'].sum()
+q1=data4[data4.LOCATION == 'KOR']
+
+q1_out=q1.groupby('TIME')['Value'].sum().reset_index()
 q1_out.corr()['TIME']['Value']
 
-
+# 답: 0.96
 
 #%%
 
@@ -491,28 +489,32 @@ q1_out.corr()['TIME']['Value']
 # - 두 국가 간의 연도별 소비량 차이가 없는 것으로 판단할 수 있는 육류 종류를 모두
 # 적으시오. (알파벳 순서) (답안 예시) BEEF, PIG, POULTRY, SHEEP
 # =============================================================================
-# 1.한국 일본 필더
-q2 = data4[data4.LOCATION.isin(['KOR' , 'JPN'])]
 
-# 2. 육류목록 추
-sub_list = q2.SUBJECT.unique()
+# 1. 한국/일본 필터링
+q2=data4[data4.LOCATION.isin(['KOR', 'JPN'])]
+
+# 2. 육류목록 추출
+sub_list=q2.SUBJECT.unique()
+# ['BEEF', 'PIG', 'POULTRY', 'SHEEP']
 
 from scipy.stats import ttest_rel
 
-# 3. 반복문 이용해서 육류 종류별 대응 t 검
+# 3. 반복문 이용해서 육류 종류별 대응 t 검정
 q2_out=[]
 for i in sub_list:
     temp=q2[q2.SUBJECT==i]
-    temp2 = pd.pivot_table(temp, index='TIME' , columns='LOCATION', 
-                      values='Value', aggfunc='mean').dropna()
-    ttest_out = ttest_rel(temp2['KOR'] , temp2['JPN'])
+    temp2=pd.pivot_table(temp, index='TIME', columns='LOCATION',
+                        values='Value', aggfunc='mean').dropna()
+    ttest_out=ttest_rel(temp2['KOR'], temp2['JPN'])
     q2_out.append([i, ttest_out.pvalue])
-
 
 q2_out=pd.DataFrame(q2_out, columns=['sub', 'pvalue'])
 
 # 4. 두 국가 간의 연도별 소비량 차이가 없는 것으로 판단할 수 있는 육류 종류
-q2_out[q2_out.pvalue>=0.5]['sub']
+q2_out[q2_out.pvalue >= 0.05]['sub']
+
+# 답: POULTRY
+
 #%%
 
 # =============================================================================
@@ -524,32 +526,35 @@ q2_out[q2_out.pvalue>=0.5]['sub']
 # 
 # =============================================================================
 
-#1. 한국 데이터 필터링
-q3 = data4[data4.LOCATION =='KOR']
+
+# 1. 한국 데이터 필터링
+
+q3=data4[data4.LOCATION == 'KOR']
 
 
-#2. 욱류 종류별로 회귀분석, 결정계수 , MAPE
-sub_list = q3.SUBJECT.unique()
+# 2. 육류 종류별로 회귀 분석, 결정계수, MAPE
+sub_list=q3.SUBJECT.unique()
 
 from sklearn.linear_model import LinearRegression
 
-q3_out = []
+q3_out=[]
 for i in sub_list:
-    temp = q3[q3.SUBJECT==i]
-    lm = LinearRegression().fit(temp[['TIME']] , temp['Value'])
-    r2=lm.score(temp[['TIME']] , temp['Value'])
-    pred = lm.predict(temp[['TIME']])
-    mape = (abs(temp['Value'] - pred) / temp['Value']).sum() * 100 / len(temp)
+    temp=q3[q3.SUBJECT == i]
+    lm=LinearRegression().fit(temp[['TIME']], temp['Value'])
+    r2=lm.score(temp[['TIME']], temp['Value'])
+    # MAPE = Σ ( | y - y ̂ | / y ) * 100/n
+    pred=lm.predict(temp[['TIME']])
+    mape= (abs(temp['Value'] - pred) / temp['Value']).sum() * 100 / len(temp)
     q3_out.append([i, r2, mape])
 
+# 3. 가장 높은 결정계수를 가진 모델의
+# 학습오차 중 MAPE를 반올림하여 소수점 둘째 자리
+q3_out=pd.DataFrame(q3_out, columns=['sub', 'r2', 'mape'])
 
-# 3. 가장 높은 결정계수를 가진 모델의 
-# 학습 오차 중 MAPE를 반올림하여 소수점 둘째 자리
-
-q3_out = pd.DataFrame(q3_out, columns = ['sub' , 'r2' , 'mape'])
 q3_out.loc[q3_out.r2.idxmax(), 'mape']
 
-# 답 : 5.78
+# 답: 5.78
+
 #%%
 
 # =============================================================================
@@ -598,7 +603,7 @@ q3_out.loc[q3_out.r2.idxmax(), 'mape']
 import pandas as pd
 import numpy as np
 
-data5= pd.read_csv('Dataset_05.csv' , na_values=['?' , 'NA' , '', ' '])
+data5=pd.read_csv('Dataset_05.csv', na_values=['?', 'NA','', ' '])
 
 # =============================================================================
 # 1.위의 표에 표시된 데이터 타입에 맞도록 전처리를 수행하였을 때, 데이터 파일 내에
@@ -609,10 +614,7 @@ data5= pd.read_csv('Dataset_05.csv' , na_values=['?' , 'NA' , '', ' '])
 
 data5.isnull().sum().sum()
 
-# 답 : 1166
-
-
-
+# 답: 1166
 
 #%%
 
@@ -622,19 +624,22 @@ data5.isnull().sum().sum()
 # 넷째 자리까지 쓰고, 귀무가설을 기각하면 Y로, 기각할 수 없으면 N으로 기술하시오. 
 # (답안 예시) 0.2345, N
 # =============================================================================
-# 1. 결측치 제거
-q2 = data5.dropna()
 
-# 2. 성별이 세분화(Segmentation)에 영향을 미치는지 독립성 검정 : 카이스퀘어 검정
-q2_tab = pd.crosstab(index=q2.Gender , columns=q2.Segmentation)
+# 1. 결측치 제거
+q2=data5.dropna()
+
+# 2. 성별이 세분화(Segmentation)에 영향을 미치는지 독립성 검정: 카이스퀘어 검정
+q2_tab=pd.crosstab(index=q2.Gender, columns=q2.Segmentation)
 
 from scipy.stats import chi2_contingency
-q2_out = chi2_contingency(q2_tab)
+q2_out=chi2_contingency(q2_tab)
 
-# p=value를 반올림하여 소수점
-# 넷째 자리까지 쓰고, 귀무가설을 기각하면 Y로, 기각할 수 없으면 N으로
-pvalue=q2_out[1]
-pvalue<0.05
+# p-value를 반올림하여 소수점
+# 넷째 자리까지 쓰고, 귀무가설을 기각하면 Y로, 기각할 수 없으면 N
+pvalue=q2_out[1]  # 0.003125001283622576
+pvalue < 0.05  # Y
+
+# 답: 0.0031, Y
 
 #%%
 
@@ -656,28 +661,30 @@ pvalue<0.05
 # (답안 예시) 0.12
 # =============================================================================
 
-# 1. 결측치가 포함된 행은 제거한 후 진행,
-# Segmentation 값이 A 또는 D인 데이터만 사용
-q3 = q2[q2.Segmentation.isin(['A' , 'D'])]
+# 1.결측치가 포함된 행은 제거한 후 진행, 
+#  Segmentation 값이 A 또는 D인 데이터만 사용
+q3=q2[q2.Segmentation.isin(['A','D'])]
 
-# 2. Train대 Test 7대3으로 데이터를 분리(Seed=123)
+# 2.Train대 Test 7대3으로 데이터를 분리(Seed = 123)
 from sklearn.model_selection import train_test_split
 
-train, test = train_test_split(q3, test_size = 0.3 , random_state=123)
+train, test=train_test_split(q3, test_size=0.3, random_state=123)
 
-# 3. Train 데이터를 사용하여 의사결정나무 학습을 수행하고, Test 데이터로 평가를 수행
-var_list = ['Age_gr', 'Gender', 'Work_Experience', 'Family_Size', 
-            'Ever_Married', 'Graduated', 'Spending_Score']
+# 3. Train 데이터를 사용하여 의사결정나무 학습을 수행하고, Test 데이터로 평가를
+# 수행(Parameter : Gini / Max Depth = 7 / Seed = 123)
+var_list=['Age_gr', 'Gender', 'Work_Experience', 'Family_Size', 
+          'Ever_Married', 'Graduated', 'Spending_Score']
 
 from sklearn.tree import DecisionTreeClassifier
 
-dt = DecisionTreeClassifier(max_depth = 7 , random_state=123)
-dt.fit(train[var_list] , train['Segmentation'])
+dt=DecisionTreeClassifier(max_depth=7, random_state=123)
+dt.fit(train[var_list], train['Segmentation'])
+
 
 # 4. 정확도(Accuracy)를 소수점 셋째 자리 이하는 버리고 소수점 둘째자리
-q3_out = dt.score(test[var_list], test['Segmentation'])
+q3_out=dt.score(test[var_list], test['Segmentation'])
 
-#답 : 0.68
+# 답: 0.68
 
 
 
